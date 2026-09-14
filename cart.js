@@ -10,6 +10,7 @@ const SWALLOWS = [
   { id: 'none', name: 'No swallow', price: 0 },
   { id: 'eba', name: 'Eba', price: 0 },        // TODO: add price
   { id: 'pounded-yam', name: 'Pounded Yam', price: 0 }, // TODO: add price
+  { id: 'semo', name: 'Semo', price: 0 },      // TODO: add price
   { id: 'fufu', name: 'Fufu', price: 0 },      // TODO: add price
 ];
 
@@ -24,8 +25,8 @@ const MENU = [
     swallow: true,
     items: [
       { id: 'grasscutter-pepper-soup', name: 'Bushmeat Pepper Soup', price: 6000, img: 'images/grasscutter.jpg', desc: 'A Delta Kitchen signature — peppery, aromatic, and simmered low till the meat falls off the bone.' },
-      { id: 'egusi-soup', name: 'Egusi Soup', price: 2000, img: 'images/egusi.jpg', desc: 'Thick, nutty melon-seed soup loaded with assorted meat and stockfish — rich, filling, and full of home flavour.' },
-      { id: 'okra-soup', name: 'Okra Soup', price: 2000, img: 'images/okra.jpg', desc: 'Fresh okra cooked down with assorted meat and stock — light, silky, and perfect with any swallow.' },
+      { id: 'egusi-soup', name: 'Egusi Soup', price: 6000, img: 'images/egusi.jpg', desc: 'Thick, nutty melon-seed soup loaded with assorted meat and stockfish — rich, filling, and full of home flavour.' },
+      { id: 'okra-soup', name: 'Okra Soup', price: 6000, img: 'images/okra.jpg', desc: 'Fresh okra cooked down with assorted meat and stock — light, silky, and perfect with any swallow.' },
       { id: 'fish-pepper-soup', name: 'Fish Pepper Soup', price: 5000, img: 'images/fish-pepper-soup.jpg', desc: 'Fresh fish in a light, fiery broth — the one people order when they need to feel better.' },
       { id: 'goat-meat-pepper-soup', name: 'Goat Meat Pepper Soup', price: 6000, img: 'images/goat-pepper-soup.jpg', desc: 'Tender goat meat, sharp spice, deep flavour. A Delta Kitchen best-seller, every single week.' },
     ],
@@ -89,18 +90,14 @@ function addFromCard(card) {
   const swallowId = swallowEl ? swallowEl.value : 'none';
   const swallow = SWALLOWS.find((s) => s.id === swallowId) || SWALLOWS[0];
 
-  const takeawayEl = card.querySelector('[data-takeaway]');
-  const takeaway = !!takeawayEl?.checked;
-
   const basePrice = Number(card.dataset.price) || 0;
-  const unitPrice = basePrice + (swallow.id !== 'none' ? swallow.price : 0) + (takeaway ? TAKEAWAY_PACK_PRICE : 0);
+  const unitPrice = basePrice + TAKEAWAY_PACK_PRICE + (swallow.id !== 'none' ? swallow.price : 0);
 
   const nameParts = [card.dataset.name];
   if (swallow.id !== 'none') nameParts.push(`+ ${swallow.name}`);
-  if (takeaway) nameParts.push('(Takeaway)');
   const displayName = nameParts.join(' ');
 
-  const compositeId = `${card.dataset.id}__${swallow.id}__${takeaway ? 1 : 0}`;
+  const compositeId = `${card.dataset.id}__${swallow.id}`;
 
   const found = items.find((i) => i.id === compositeId);
   if (found) found.qty += qty;
@@ -109,7 +106,6 @@ function addFromCard(card) {
   setCartOpen(true);
   if (qtyEl) qtyEl.textContent = '1';
   if (swallowEl) swallowEl.value = 'none';
-  if (takeawayEl) takeawayEl.checked = false;
 }
 
 function changeCartQty(id, delta) {
@@ -137,10 +133,9 @@ function renderMenu() {
             </div>
             <div class="menu-body">
               <h3>${esc(item.name)}</h3>
-              <p>${esc(item.desc)}</p>
               <div class="menu-meta">
-                <span class="menu-price">${naira(item.price)}</span>
-                <span class="menu-price-note">per portion</span>
+                <span class="menu-price">${naira(item.price + TAKEAWAY_PACK_PRICE)}</span>
+                <span class="menu-price-note">per portion, packed</span>
               </div>
               <div class="menu-options">
                 ${section.swallow ? `
@@ -150,10 +145,6 @@ function renderMenu() {
                     ${SWALLOWS.map((s) => `<option value="${esc(s.id)}">${esc(s.name)}${s.price ? ` (+${naira(s.price)})` : ''}</option>`).join('')}
                   </select>
                 </label>` : ''}
-                <label class="menu-checkbox">
-                  <input type="checkbox" data-takeaway>
-                  <span>Takeaway pack${TAKEAWAY_PACK_PRICE ? ` (+${naira(TAKEAWAY_PACK_PRICE)})` : ''}</span>
-                </label>
               </div>
               <div class="menu-actions">
                 <div class="qty-stepper">

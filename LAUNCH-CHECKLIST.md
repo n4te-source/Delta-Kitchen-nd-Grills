@@ -1,12 +1,3 @@
-# Delta Kitchen & Grills — Pre-Launch Checklist
-
-Work through this before pointing your domain at the live site. Test on an actual phone, not just a resized browser window — mobile Safari and Chrome both behave differently from desktop dev tools.
-
-## 1. Content — fill in the placeholders
-- [ ] Add real prices for all 5 swallow options in `cart.js` (`SWALLOWS` array — currently ₦0 placeholders)
-- [ ] Add the real takeaway pack price in `cart.js` (`TAKEAWAY_PACK_PRICE` — currently ₦0)
-- [ ] Add opening hours in `contact.html` (currently a placeholder line)
-- [ ] Double-check every dish price in `cart.js` is current — menu prices are the #1 thing customers screenshot and hold you to
 
 ## 2. Images — the biggest gap right now
 - [ ] Every dish in `cart.js` needs its matching photo in `/images/` (check filenames match exactly — case-sensitive on most servers, so `Jollof.jpg` ≠ `jollof.jpg`)
